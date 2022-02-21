@@ -15,7 +15,7 @@ router.post('/',async (req,res)=>{
         var userData = await profileModel.findOne({$or:[{email:email}]});}
     
         if(userData.password===password){
-            res.send(true);
+            res.send(userData);
         }else{
             res.send(false);
         }
