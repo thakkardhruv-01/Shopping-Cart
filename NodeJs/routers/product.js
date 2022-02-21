@@ -3,6 +3,7 @@ const router = express.Router();
 
 const ProductModel = require('../models/product-model');
 const CountModel = require('../models/counter-model');
+const profileModel = require('../models/profile-model')
 
 router.get('/', (req, res) => {
     ProductModel.find((err, doc) => {
@@ -11,6 +12,19 @@ router.get('/', (req, res) => {
     })
 
 })
+
+router.get('/admin/:profileId',async (req,res)=>{
+    try {
+        const profileId = req.params.profileId;
+        var userData = await profileModel.findOne({profileId:profileId});
+        res.send(userData);
+        console.log(userData);
+        
+    } catch (err) {
+        res.send(err);
+        console.log(err);
+    }
+});
 
 router.post('/', async (req, res) => {
 
