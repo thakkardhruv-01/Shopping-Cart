@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 const cors = require('cors');
-app.use(cors());
+app.use(cors({origin:'*'}));
 
 //localhost:3000/profile
 const profileRouter = require('./routers/profile');
