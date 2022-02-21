@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
     let product = new ProductModel({
         productName: req.body.productName,
-        productId: 123541,
+        productId: id,
         image: req.body.image,
         description: req.body.description,
         quantity: req.body.quantity,

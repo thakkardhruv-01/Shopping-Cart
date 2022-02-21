@@ -3,10 +3,7 @@ const mongoose = require('mongoose')
 // dbConnection();
 const productSchema = new mongoose.Schema({
     productName: String,
-    productId: [{
-        type: Number,
-        unique: [true,'Unique ProductId Required']
-    }],
+    productId: Number,
     image: String,
     description: String,
     quantity: Number,
