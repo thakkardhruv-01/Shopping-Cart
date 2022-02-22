@@ -14,11 +14,11 @@ router.get('/', (req, res) => {
 })
 
 router.get('/admin/:profileId',async (req,res)=>{
-    try {
+    try { 
         const profileId = req.params.profileId;
-        var userData = await profileModel.findOne({profileId:profileId});
-        res.send(userData);
-        console.log(userData);
+        //var userData = await profileModel.findOne({profileId:profileId});
+        var productData = await ProductModel.findOne({profileId:profileId});
+        console.log(productData);
         
     } catch (err) {
         res.send(err);
@@ -53,7 +53,8 @@ router.post('/', async (req, res) => {
         image: req.body.image,
         description: req.body.description,
         quantity: req.body.quantity,
-        price: req.body.price
+        price: req.body.price,
+        profileId:req.body.profileId
     })
     product.save()
         .then(() => { res.send(product); })
