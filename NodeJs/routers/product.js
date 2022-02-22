@@ -16,8 +16,7 @@ router.get('/', (req, res) => {
 router.get('/admin/:profileId',async (req,res)=>{
     try { 
         const profileId = req.params.profileId;
-        //var userData = await profileModel.findOne({profileId:profileId});
-        var productData = await ProductModel.findOne({profileId:profileId});
+        var productData = await ProductModel.find({profileId:profileId});
         res.send(productData);
         
     } catch (err) {

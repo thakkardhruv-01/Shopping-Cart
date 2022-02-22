@@ -20,6 +20,10 @@ app.use('/login',loginRouter);
 const productRouter = require('./routers/product');
 app.use('/product',productRouter);
 
+//localhost:3000/cart
+const cartRouter = require('./routers/cart');
+app.use('/cart',cartRouter);
+
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
     let host = server.address().address;
