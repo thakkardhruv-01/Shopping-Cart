@@ -8,6 +8,20 @@ const ProductModel = require('../models/product-model');
 const CountModel = require('../models/counter-model');
 const profileModel = require('../models/profile-model');
 const CartProductModel = require('../models/cart-model');
+//const imgPath = console.log(path.join(__dirname,"../public/upload"));
+
+router.use(express.static(__dirname+"./public"))
+
+var Storage = multer.diskStorage({
+    destination:'./public/uploads',
+    filename:(res,file,cb)=>{
+        cb(null,file.fieldname+"_"+Date.now()+path.extname(file.originalname))
+    }
+});
+
+var upload = multer({
+    storage:Storage
+}).single('image')
 
 router.get('/', (req, res) => {
     ProductModel.find((err, doc) => {
@@ -57,7 +71,7 @@ router.delete('/:productId', (req, res) => {
     })
 })
 
-router.post('/', async (req, res) => {
+router.post('/', upload,async (req, res) => {
 
     try {
         var id;
@@ -81,7 +95,7 @@ router.post('/', async (req, res) => {
     let product = new ProductModel({
         productName: req.body.productName,
         productId: id,
-        image: req.body.image,
+        image: req.file.filename,
         description: req.body.description,
         quantity: req.body.quantity,
         price: req.body.price,
