@@ -12,6 +12,7 @@ router.post('/',async (req,res)=>{
         if(email && phone){
             res.send(false);
         }
+        else{
 
         if(!email){
         var userData = await profileModel.findOne({$or:[{phone:phone}]});}
@@ -23,6 +24,7 @@ router.post('/',async (req,res)=>{
         }else{
             res.send(false);
         }
+    }
 
     }catch(err){
         res.send(false);
