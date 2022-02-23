@@ -8,6 +8,7 @@ const ProductModel = require('../models/product-model');
 const CountModel = require('../models/counter-model');
 const profileModel = require('../models/profile-model');
 const CartProductModel = require('../models/cart-model');
+const { accessSync } = require('fs');
 //const imgPath = console.log(path.join(__dirname,"../public/upload"));
 
 router.use(express.static(__dirname+"./public"))
@@ -55,19 +56,19 @@ router.get('/edit/:productId', async (req, res) => {
     }
 });
 //localhost:3000/product/:productId
-router.delete('/:productId', (req, res) => {
-    ProductModel.findOneAndDelete({ productId: req.params.productId }, (err, doc) => {
+router.delete('/:productId', async (req, res) => {
+    console.log(req.params.productId);
+    ProductModel.deleteOne({ productId: req.params.productId }, async (err, doc1) => {
         if (!err) {
-            "deleted from products: "
-            CartProductModel.deleteMany({ productId: req.params.productId }, (err, doc) => {
+            CartProductModel.deleteMany({ productId: req.params.productId }, async (err, doc2) => {
                 if (!err) {
-                    "deleted from carts: "
-                    res.send("Item deleted");
+                    console.log(await doc1 , await doc2)
+                    res.send("Deleted")
                 }
-                else { console.log(err); }
+                else { console.log("deleting err from cart"); }
             })
         }
-        else { console.log(err); }
+        else { console.log("deleting err from products"); }
     })
 })
 
