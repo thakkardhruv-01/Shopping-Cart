@@ -40,13 +40,14 @@ router.get('/edit/:productId',async (req,res)=>{
 //localhost:3000/product/:productId
 router.delete('/:productId', (req, res) => {
     ProductModel.findOneAndDelete({productId:req.params.productId}, (err, doc) => {
-        if (!err) {"deleted from products: " + res.send(doc); }
+        if (!err) {"deleted from products: " }
         else { console.log(err); }
     })
     CartProductModel.deleteMany({productId:req.params.productId}, (err, doc) => {
-        if (!err) {"deleted from carts: " + res.send(doc); }
+        if (!err) {"deleted from carts: " }
         else { console.log(err); }
     })
+    res.send("Item deleted");
 })
 
 router.post('/', async (req, res) => {
@@ -84,7 +85,7 @@ router.post('/', async (req, res) => {
         .catch((err) => { console.log(err); });
 })
 //localhost:3000/product/:productId
-router.put("/:productId", async (req, res) => {
+router.post("/:productId", async (req, res) => {
     try {
         const productId = req.params.productId;
         let product = {
@@ -96,7 +97,7 @@ router.put("/:productId", async (req, res) => {
         }
         const updatedProduct = await ProductModel.findOneAndUpdate(productId, { $set: product }, { new: true });
         res.send(updatedProduct);
-        updatedUser.save()
+        updatedProduct.save()
     } catch (err) {
         res.send(err);
         console.log(err);
