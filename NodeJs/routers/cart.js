@@ -26,7 +26,7 @@ router.post('/',async (req, res) => {
             profileId:req.body.profileId
         })
         cartProduct.save()
-            .then(() => { res.send(product); })
+            .then(() => { res.send(cartProduct); })
             .catch((err) => { console.log(err); });
 
 

@@ -3,7 +3,8 @@ const router = express.Router();
 
 const ProductModel = require('../models/product-model');
 const CountModel = require('../models/counter-model');
-const profileModel = require('../models/profile-model')
+const profileModel = require('../models/profile-model');
+const CartProductModel = require('../models/cart-model');
 
 router.get('/', (req, res) => {
     ProductModel.find((err, doc) => {
@@ -12,7 +13,7 @@ router.get('/', (req, res) => {
     })
 
 })
-
+//localhost:3000/product/admin/:profileId
 router.get('/admin/:profileId',async (req,res)=>{
     try { 
         const profileId = req.params.profileId;
@@ -24,6 +25,30 @@ router.get('/admin/:profileId',async (req,res)=>{
         console.log(err);
     }
 });
+//localhost:3000/product/edit/:productId
+router.get('/edit/:productId',async (req,res)=>{
+    try { 
+        const productId = req.params.productId;
+        var productData = await ProductModel.find({productId:productId});
+        res.send(productData);
+        
+    } catch (err) {
+        res.send(err);
+        console.log(err);
+    }
+});
+//localhost:3000/product/:productId
+router.delete('/:productId', (req, res) => {
+    ProductModel.findOneAndDelete(req.params.productId, (err, doc) => {
+        if (!err) {"deleted from products: " + res.send(doc); }
+        else { console.log(err); }
+    })
+    CartProductModel.findAndDelete(req.params.productId, (err, doc) => {
+        if (!err) {"deleted from carts: " + res.send(doc); }
+        else { console.log(err); }
+    })
+    
+})
 
 router.post('/', async (req, res) => {
 

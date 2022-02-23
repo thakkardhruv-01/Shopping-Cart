@@ -9,6 +9,10 @@ router.post('/',async (req,res)=>{
         const phone = req.body.phone;
         const password = req.body.password;
 
+        if(email && phone){
+            res.send(false);
+        }
+
         if(!email){
         var userData = await profileModel.findOne({$or:[{phone:phone}]});}
         if(!phone){
