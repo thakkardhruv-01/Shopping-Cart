@@ -39,11 +39,11 @@ router.get('/edit/:productId',async (req,res)=>{
 });
 //localhost:3000/product/:productId
 router.delete('/:productId', (req, res) => {
-    ProductModel.findOneAndDelete(req.params.productId, (err, doc) => {
+    ProductModel.findOneAndDelete({productId:req.params.productId}, (err, doc) => {
         if (!err) {"deleted from products: " + res.send(doc); }
         else { console.log(err); }
     })
-    CartProductModel.findAndDelete(req.params.productId, (err, doc) => {
+    CartProductModel.deleteMany({productId:req.params.productId}, (err, doc) => {
         if (!err) {"deleted from carts: " + res.send(doc); }
         else { console.log(err); }
     })
@@ -84,4 +84,25 @@ router.post('/', async (req, res) => {
         .then(() => { res.send(product); })
         .catch((err) => { console.log(err); });
 })
+//localhost:3000/product/:productId
+router.put("/:productId", async (req, res) => {
+    try {
+        const productId = req.params.productId;
+        let user = {
+            userName: req.body.userName,
+            email: req.body.email,
+            mobile: req.body.mobile,
+            address: req.body.address,
+            status: req.body.status,
+        }
+        const updatedUser = await userModel.findOneAndUpdate(userId, { $set: user }, { new: true });
+        res.send(updatedUser);
+        updatedUser.save()
+    } catch (err) {
+        res.send(err);
+        console.log(err);
+    }
+
+})
+
 module.exports = router;
