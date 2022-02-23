@@ -47,7 +47,6 @@ router.delete('/:productId', (req, res) => {
         if (!err) {"deleted from carts: " + res.send(doc); }
         else { console.log(err); }
     })
-    
 })
 
 router.post('/', async (req, res) => {
