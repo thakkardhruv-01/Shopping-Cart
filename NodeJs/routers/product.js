@@ -88,15 +88,15 @@ router.post('/', async (req, res) => {
 router.put("/:productId", async (req, res) => {
     try {
         const productId = req.params.productId;
-        let user = {
-            userName: req.body.userName,
-            email: req.body.email,
-            mobile: req.body.mobile,
-            address: req.body.address,
-            status: req.body.status,
+        let product = {
+            productName: req.body.productName,
+            image: req.body.image,
+            price: req.body.price,
+            quantity: req.body.quantity,
+            description: req.body.description,
         }
-        const updatedUser = await userModel.findOneAndUpdate(userId, { $set: user }, { new: true });
-        res.send(updatedUser);
+        const updatedProduct = await ProductModel.findOneAndUpdate(productId, { $set: product }, { new: true });
+        res.send(updatedProduct);
         updatedUser.save()
     } catch (err) {
         res.send(err);
