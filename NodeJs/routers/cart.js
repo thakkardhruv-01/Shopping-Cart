@@ -8,10 +8,17 @@ router.get('/:profileId', async (req, res) => {
     try {
         const profileId = req.params.profileId;
         const cartProduct = await CartProductModel.find({ profileId: profileId }, { productId: 1, _id: 0 });
-        const allProductIds = cartProduct.map(obj =>obj.productId);
+        const allProductIds = cartProduct.map(obj =>obj.productId); [1,5,7]
         const cartProductData = await ProductModel.find({productId:{$in:allProductIds}});
-        console.log(allProductIds);
-        res.send(cartProductData);
+        const ProductDataForCart = await ProductModel.find({productId:{$in:allProductIds}},{quantity:0});
+        // allProductIds.forEach(element => {
+        //     let qty = CartProductModel.find({productId: element},{quantity:1}) 
+        //     console.log("qty"+qty);
+        //     ProductDataForCart.updateOne({ productId: element},[{ $set: {quantity:11000} }],{ new: true });       
+        // });
+        // console.log(ProductDataForCart); //data without quantity
+        res.send(ProductDataForCart); 
+
 
     } catch (err) {
         res.send(err);
@@ -43,5 +50,17 @@ router.post('/',async (req, res) => {
         console.log(err);
     }
 });
+
+router.delete('/:productId',async (req,res)=>{
+    try{
+        CartProductModel.deleteOne({ productId: req.params.productId },async (err,doc)=>{
+            if(!err){ res.send(doc)}
+            else{ res.send()}
+        })
+    }
+    catch(err){
+        res.send(err)
+    }
+})
 
 module.exports = router;

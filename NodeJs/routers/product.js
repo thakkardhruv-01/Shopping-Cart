@@ -102,7 +102,7 @@ router.post('/', upload, async (req, res) => {
     let product = new ProductModel({
         productName: req.body.productName,
         productId: id,
-        image: req.file.filename,
+        image: req.body.image,
         description: req.body.description,
         quantity: req.body.quantity,
         price: req.body.price,
