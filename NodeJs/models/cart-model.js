@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const cartProductSchema = new mongoose.Schema({
     productId:Number,
     profileId:Number,
+    quantity:Number
 });
 
 const CartProductModel = new mongoose.model("CartProduct", cartProductSchema);

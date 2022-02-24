@@ -21,14 +21,22 @@ router.get('/:profileId', async (req, res) => {
 
 router.post('/',async (req, res) => {
     try {
+    let count = await CartProductModel.find({productId: req.body.productId, profileId:req.body.profileId},{quantity:1})
+    if(!count.length){
         let cartProduct = new CartProductModel({
             productId: req.body.productId,
-            profileId:req.body.profileId
+            profileId:req.body.profileId,
+            quantity:1
         })
         cartProduct.save()
             .then(() => { res.send(cartProduct); })
             .catch((err) => { console.log(err); });
-
+    }
+    else{
+        qty = count[0].quantity+1;
+        await CartProductModel.updateOne({ productId: req.body.productId, profileId:req.body.profileId},[{ $set: {quantity:qty} }],{ new: true });    
+        res.send("update")
+    }
 
     } catch (err) {
         res.send(err);
