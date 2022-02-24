@@ -11,17 +11,17 @@ const CartProductModel = require('../models/cart-model');
 const { accessSync } = require('fs');
 //const imgPath = console.log(path.join(__dirname,"../public/upload"));
 
-router.use(express.static(__dirname+"./public"))
+router.use(express.static(__dirname + "./public"))
 
 var Storage = multer.diskStorage({
-    destination:'./public/uploads',
-    filename:(res,file,cb)=>{
-        cb(null,file.fieldname+"_"+Date.now()+path.extname(file.originalname))
+    destination: './public/uploads',
+    filename: (res, file, cb) => {
+        cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname))
     }
 });
 
 var upload = multer({
-    storage:Storage
+    storage: Storage
 }).single('image')
 
 router.get('/', (req, res) => {
@@ -60,19 +60,25 @@ router.delete('/:productId', async (req, res) => {
     console.log(req.params.productId);
     ProductModel.deleteOne({ productId: req.params.productId }, async (err, doc1) => {
         if (!err) {
-            CartProductModel.deleteMany({ productId: req.params.productId }, async (err, doc2) => {
-                if (!err) {
-                    console.log(await doc1 , await doc2)
-                    res.send("Deleted")
-                }
-                else { console.log("deleting err from cart"); }
-            })
+            let c = await CartProductModel.find({ productId: req.params.productId })
+            if (c.length > 0) {
+                CartProductModel.deleteMany({ productId: req.params.productId }, async (err, doc2) => {
+                    if (!err) {
+                        console.log(await doc1, await doc2)
+                        res.send("Deleted")
+                    }
+                    else { console.log("deleting err from cart"); }
+                })
+            }
+            else{
+                res.send(doc1)
+            }
         }
         else { console.log("deleting err from products"); }
     })
 })
 
-router.post('/', upload,async (req, res) => {
+router.post('/', upload, async (req, res) => {
 
     try {
         var id;
