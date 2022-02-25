@@ -65,7 +65,7 @@ router.delete('/:productId', async (req, res) => {
                 CartProductModel.deleteMany({ productId: req.params.productId }, async (err, doc2) => {
                     if (!err) {
                         console.log(await doc1, await doc2)
-                        res.send("Deleted from Both")
+                        res.send()
                     }
                     else { console.log("deleting err from cart"); }
                 })
