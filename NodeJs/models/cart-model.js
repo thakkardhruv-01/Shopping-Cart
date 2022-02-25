@@ -5,7 +5,8 @@ const cartProductSchema = new mongoose.Schema({
     productId:Number,
     profileId:Number,
     productName:String,
-    quantity:Number
+    quantity:Number,
+    price:Number
 });
 
 const CartProductModel = new mongoose.model("CartProduct", cartProductSchema);

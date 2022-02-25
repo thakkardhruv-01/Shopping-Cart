@@ -47,7 +47,7 @@ router.get('/admin/:profileId', async (req, res) => {
 router.get('/edit/:productId', async (req, res) => {
     try {
         const productId = req.params.productId;
-        var productData = await ProductModel.find({ productId: productId });
+        var productData = await ProductModel.findOne({ productId: productId });
         res.send(productData);
 
     } catch (err) {

@@ -32,12 +32,13 @@ router.get('/:profileId', async (req, res) => {
 router.post('/',async (req, res) => {
     try {
     let count = await CartProductModel.find({productId: req.body.productId, profileId:req.body.profileId},{quantity:1})
-    let getProductName = await ProductModel.find({productId: req.body.productId})
+    let getProduct = await ProductModel.find({productId: req.body.productId})
     if(!count.length){
         let cartProduct = new CartProductModel({
             productId: req.body.productId,
             profileId:req.body.profileId,
-            productName:getProductName[0].productName,
+            productName:getProduct[0].productName,
+            price:getProduct[0].price,
             quantity:1
         })
         cartProduct.save()
@@ -47,7 +48,7 @@ router.post('/',async (req, res) => {
     else{
         qty = count[0].quantity+1;
         await CartProductModel.updateOne({ productId: req.body.productId, profileId:req.body.profileId},[{ $set: {quantity:qty} }],{ new: true });    
-        res.send("update")
+        res.send()
     }
 
     } catch (err) {
