@@ -113,7 +113,7 @@ router.post('/', upload, async (req, res) => {
         .catch((err) => { console.log(err); });
 })
 //localhost:3000/product/:productId
-router.post("/:productId", async (req, res) => {
+router.put("/:productId", async (req, res) => {
     try {
         const productId = req.params.productId;
         let product = {
