@@ -68,5 +68,25 @@ router.delete('/:productId',async (req,res)=>{
         res.send(err)
     }
 })
+//localhost:3000/cart/checkout/:profileId
+router.get('/checkout/:profileId',async (req,res)=>{
+    try{
+        const profileId = req.params.profileId;
+        let getProductsQty = await CartProductModel.find({profileId},{quantity:1,_id:0})
+        const qtyArray = getProductsQty.map(obj =>obj.quantity); //[1,5,7]
+        let getProductsPrices = await CartProductModel.find({profileId},{price:1,_id:0})
+        const priceArray = getProductsPrices.map(obj =>obj.price); //[1,5,7]
+        let total=0;
+        for(let i=0;i<priceArray.length;i++){
+            total+=priceArray[i]*qtyArray[i]
+        }
+        res.send(JSON.stringify(total))
+        
+    }catch(e)
+    {
+        res.send(e)
+    }
+
+})
 
 module.exports = router;
