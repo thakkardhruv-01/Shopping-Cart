@@ -81,7 +81,7 @@ router.get('/checkout/:profileId',async (req,res)=>{
             total+=priceArray[i]*qtyArray[i]
         }
         res.send(JSON.stringify(total))
-        
+
     }catch(e)
     {
         res.send(e)
