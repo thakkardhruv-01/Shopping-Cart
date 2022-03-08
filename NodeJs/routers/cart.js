@@ -19,8 +19,8 @@ router.get('/:profileId', async (req, res) => {
         // console.log(ProductDataForCart); //data without quantity
 
         const cartProduct = await CartProductModel.find({ profileId: profileId });
-        res.send(cartProduct); 
-        console.log(cartProduct); 
+        res.send(cartProduct);
+        console.log(cartProduct);
 
 
     } catch (err) {
@@ -29,27 +29,27 @@ router.get('/:profileId', async (req, res) => {
     }
 });
 
-router.post('/',async (req, res) => {
+router.post('/', async (req, res) => {
     try {
-    let count = await CartProductModel.find({productId: req.body.productId, profileId:req.body.profileId},{quantity:1})
-    let getProduct = await ProductModel.find({productId: req.body.productId})
-    if(!count.length){
-        let cartProduct = new CartProductModel({
-            productId: req.body.productId,
-            profileId:req.body.profileId,
-            productName:getProduct[0].productName,
-            price:getProduct[0].price,
-            quantity:1
-        })
-        cartProduct.save()
-            .then(() => { res.send(cartProduct); })
-            .catch((err) => { console.log(err); });
-    }
-    else{
-        qty = count[0].quantity+1;
-        await CartProductModel.updateOne({ productId: req.body.productId, profileId:req.body.profileId},[{ $set: {quantity:qty} }],{ new: true });    
-        res.send()
-    }
+        let count = await CartProductModel.find({ productId: req.body.productId, profileId: req.body.profileId }, { quantity: 1 })
+        let getProduct = await ProductModel.find({ productId: req.body.productId })
+        if (!count.length) {
+            let cartProduct = new CartProductModel({
+                productId: req.body.productId,
+                profileId: req.body.profileId,
+                productName: getProduct[0].productName,
+                price: getProduct[0].price,
+                quantity: 1
+            })
+            cartProduct.save()
+                .then(() => { res.send(cartProduct); })
+                .catch((err) => { console.log(err); });
+        }
+        else {
+            qty = count[0].quantity + 1;
+            await CartProductModel.updateOne({ productId: req.body.productId, profileId: req.body.profileId }, [{ $set: { quantity: qty } }], { new: true });
+            res.send()
+        }
 
     } catch (err) {
         res.send(err);
@@ -57,33 +57,67 @@ router.post('/',async (req, res) => {
     }
 });
 
-router.delete('/:productId',async (req,res)=>{
-    try{
-        CartProductModel.deleteOne({ productId: req.params.productId },async (err,doc)=>{
-            if(!err){ res.send(doc)}
-            else{ res.send()}
+
+//increase -decrease 
+router.post('/increase', async (req, res) => {
+    try {
+        let count = await CartProductModel.find({ productId: req.body.productId, profileId: req.body.profileId }, { quantity: 1 })
+        const available = await ProductModel.find({ productId: req.body.productId }, { quantity: 1 })
+        qty = count[0].quantity
+        if (count[0].quantity < available[0].quantity) {
+            qty = qty + 1;
+        }
+        await CartProductModel.updateOne({ productId: req.body.productId, profileId: req.body.profileId }, [{ $set: { quantity: qty } }], { new: true });
+        res.send()
+
+    } catch (err) {
+        res.send(err);
+        console.log(err);
+    }
+});
+router.post('/decrease', async (req, res) => {
+    try {
+        let count = await CartProductModel.find({ productId: req.body.productId, profileId: req.body.profileId }, { quantity: 1 })
+        qty = count[0].quantity
+        if (qty > 1) {
+            qty = qty - 1;
+        }
+        await CartProductModel.updateOne({ productId: req.body.productId, profileId: req.body.profileId }, [{ $set: { quantity: qty } }], { new: true });
+        res.send()
+
+    } catch (err) {
+        res.send(err);
+        console.log(err);
+    }
+});
+
+
+router.delete('/:productId', async (req, res) => {
+    try {
+        CartProductModel.deleteOne({ productId: req.params.productId }, async (err, doc) => {
+            if (!err) { res.send(doc) }
+            else { res.send() }
         })
     }
-    catch(err){
+    catch (err) {
         res.send(err)
     }
 })
 //localhost:3000/cart/checkout/:profileId
-router.get('/checkout/:profileId',async (req,res)=>{
-    try{
+router.get('/checkout/:profileId', async (req, res) => {
+    try {
         const profileId = req.params.profileId;
-        let getProductsQty = await CartProductModel.find({profileId},{quantity:1,_id:0})
-        const qtyArray = getProductsQty.map(obj =>obj.quantity); //[1,5,7]
-        let getProductsPrices = await CartProductModel.find({profileId},{price:1,_id:0})
-        const priceArray = getProductsPrices.map(obj =>obj.price); //[1,5,7]
-        let total=0;
-        for(let i=0;i<priceArray.length;i++){
-            total+=priceArray[i]*qtyArray[i]
+        let getProductsQty = await CartProductModel.find({ profileId }, { quantity: 1, _id: 0 })
+        const qtyArray = getProductsQty.map(obj => obj.quantity); //[1,5,7]
+        let getProductsPrices = await CartProductModel.find({ profileId }, { price: 1, _id: 0 })
+        const priceArray = getProductsPrices.map(obj => obj.price); //[1,5,7]
+        let total = 0;
+        for (let i = 0; i < priceArray.length; i++) {
+            total += priceArray[i] * qtyArray[i]
         }
         res.send(JSON.stringify(total))
 
-    }catch(e)
-    {
+    } catch (e) {
         res.send(e)
     }
 
