@@ -7,7 +7,7 @@ const CountModel = require('../models/counter-model');
 router.get('/:profileId', (req, res) => {
     console.log(req.params.profileId)
     profileModel.find({profileId:req.params.profileId},(err, doc) => {
-        if (!err) { res.send(doc); }
+        if (!err) { res.send(doc);}
         else { res.send(err); }
     })
 })
