@@ -99,6 +99,8 @@ router.post('/', upload, async (req, res) => {
         console.log(e);
     }
     const d = new Date().toDateString()
+    const sellerName = await profileModel.find({profileId: req.body.profileId},{name:1})
+    console.log(typeof sellerName[0]['name']);
     let product = new ProductModel({
         productName: req.body.productName,
         productId: id,
@@ -107,6 +109,7 @@ router.post('/', upload, async (req, res) => {
         quantity: req.body.quantity,
         price: req.body.price,
         profileId: req.body.profileId,
+        sellerName:sellerName[0]['name'],
         status:req.body.status,
         createdDate: d
     })
@@ -128,7 +131,7 @@ router.put("/:productId", async (req, res) => {
         }
         const updatedProduct = await ProductModel.findOneAndUpdate(productId, { $set: product }, { new: true });
         res.send(updatedProduct);
-        updatedProduct.save()
+        updatedProduct.save();
     } catch (err) {
         res.send(err);
         console.log(err);
