@@ -25,7 +25,7 @@ var upload = multer({
 }).single('image')
 
 router.get('/', (req, res) => {
-    ProductModel.find((err, doc) => {
+    ProductModel.find({status:'Active'},(err, doc) => {
         if (!err) { res.send(doc); }
         else { res.send(err); }
     })
