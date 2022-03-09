@@ -129,7 +129,7 @@ router.put("/:productId", async (req, res) => {
             description: req.body.description,
             status:req.body.status,
         }
-        const updatedProduct = await ProductModel.findOneAndUpdate(productId, { $set: product }, { new: true });
+        const updatedProduct = await ProductModel.findOneAndUpdate({productId}, { $set: product }, { new: true });
         res.send(updatedProduct);
         updatedProduct.save();
     } catch (err) {
