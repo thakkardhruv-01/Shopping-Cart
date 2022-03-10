@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router();
 
+const jwt = require('jsonwebtoken')
+
 const profileModel = require('../models/profile-model');
 
 router.post('/',async (req,res)=>{
@@ -20,6 +22,9 @@ router.post('/',async (req,res)=>{
         var userData = await profileModel.findOne({$or:[{email:email}]});}
     
         if(userData.password===password){
+            let payload = { subject : userData._id}
+            let token = jwt.sign(payload,'secretKey')
+            userData.token = token;
             res.send(userData);
         }else{
             res.send(false);

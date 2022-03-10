@@ -7,7 +7,8 @@ const profileSchema = new mongoose.Schema({
     phone:Number,
     role:String,
     password:String,
-    profileId:Number
+    profileId:Number,
+    token:String
 });
 
 const ProfileModel = new mongoose.model("Profile",profileSchema);
