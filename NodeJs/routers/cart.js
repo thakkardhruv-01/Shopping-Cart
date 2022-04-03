@@ -45,11 +45,11 @@ router.post('/', async (req, res) => {
                 .then(() => { res.send(cartProduct); })
                 .catch((err) => { console.log(err); });
         }
-        else {
-            qty = count[0].quantity + 1;
-            await CartProductModel.updateOne({ productId: req.body.productId, profileId: req.body.profileId }, [{ $set: { quantity: qty } }], { new: true });
-            res.send()
-        }
+        // else {
+        //     qty = count[0].quantity + 1;
+        //     await CartProductModel.updateOne({ productId: req.body.productId, profileId: req.body.profileId }, [{ $set: { quantity: qty } }], { new: true });
+        //     res.send()
+        // }
 
     } catch (err) {
         res.send(err);
@@ -121,6 +121,21 @@ router.get('/checkout/:profileId', async (req, res) => {
         res.send(e)
     }
 
+})
+
+router.post('/check',async(req,res)=>{
+    try{
+        let count = await CartProductModel.find({ productId: req.body.productId, profileId: req.body.profileId }, { quantity: 1 })
+        if (!count.length) {
+            res.send(false);
+        }
+        else{
+            res.send(true);
+        }
+    }catch (err) {
+        res.send(err);
+        console.log(err);
+    }
 })
 
 module.exports = router;
